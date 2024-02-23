@@ -8,5 +8,5 @@ REM
 REM ==
 REM 
 jar cvfm out/Slowcat.jar manifest.txt -C out . lib
-java -jar out/Slowcat.jar < starwars.txt
+java -jar out/Slowcat.jar
 PAUSE
