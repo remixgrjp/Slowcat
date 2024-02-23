@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.IOException;
 
 public class Main{
 	public static void main( String[] args ){
@@ -8,9 +7,13 @@ public class Main{
 		try{
 			String s;
 			while( null != ( s= br.readLine() ) ){
-				System.out.println( s );
+				for( int i= 0; i < s.length(); i++ ){
+					System.out.print( s.charAt( i ) );
+					Thread.sleep( 10 );
+				}
+				System.out.println( "" );
 			}
-		}catch( IOException e ){
+		}catch( Exception e ){//readLine(),sleep()
 			e.printStackTrace();
 		}
 	}
