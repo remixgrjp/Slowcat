@@ -5,12 +5,40 @@ import java.io.InputStreamReader;
 import java.io.InputStream;
 
 public class Main{
-	public static void main( String[] args ){
-		FileThread t= new FileThread( new File( "starwars.txt" ) );
-
-//		InputStreamReader br = new InputStreamReader( System.in );
-		InputStream br = System.in;
+	public static void main( String[] a ){
+		boolean isRepeat= false;
+		int iDelay= 10;//[ms]
+		File file= null;
+		FileThread t= null;
 		try{
+			System.err.println( "paramaters:" + a.length );
+			for( int i= 0; a.length > i; i++ ){
+				if( a[i].toLowerCase().startsWith( "-r" ) ){
+					isRepeat= true;
+					System.err.print( String.format( "%d:repeat,", i ) );
+				}else if( a[i].toLowerCase().startsWith( "-d" ) ){
+					System.err.print( String.format( "%d:delay,", i ) );
+					try{//must delay time, next
+						if( a.length <= ++i ) throw new NumberFormatException( "None delay time." );
+						System.err.print( String.format( "%d:%s,", i, a[i] ) );
+						iDelay= Integer.valueOf( a[i] );
+					}catch( NumberFormatException e ){
+						System.err.println( "\n" + e.toString() );
+						throw new IllegalArgumentException();
+					}
+				}else{
+					System.err.print( String.format( "%d:%s,", i, a[i] ) );
+					file= new File( a[i] );
+				}
+			}
+			if( null == file ) throw new IllegalArgumentException();
+			System.err.println( String.format( "\n---\ndelay: %dms", iDelay ) );
+			System.err.println( String.format( "repeat: %s", ( isRepeat ? "ON" : "OFF") ) );
+			System.err.println( String.format( "file: %s",  file.getAbsolutePath() ) );
+
+			t= new FileThread( file, iDelay, isRepeat );
+//			InputStreamReader br = new InputStreamReader( System.in );
+			InputStream br = System.in;
 			while( true ){
 				if( ! t.isOn ) break;
 //				if( ! br.ready() ) continue;
@@ -19,6 +47,10 @@ public class Main{
 				System.out.println( "\n=== ABORTED ===" );
 				break;
 			}
+		}catch( IllegalArgumentException e ){
+			System.err.println( "\nUsage:\n\tjava Main [-Repeet] [-Delay ms] TEXT_FILE\n\tStop by [Enter]." );
+			System.err.println( "Example:\n\tjava Main starwars.txt 2>nul" );
+			System.err.println( "\tjava Main -r -d 10 starwars.txt" );
 		}catch( Exception e ){
 			e.printStackTrace();
 		}finally{
@@ -28,11 +60,15 @@ public class Main{
 
 	public static class FileThread extends Thread{
 		boolean isOn= true;
+		boolean isRepeat= false;
+		int iDelay= 10;//[ms]
 		File file= null;
 		BufferedReader br= null;
 
-		public FileThread( File f ){
+		public FileThread( File f, int i, boolean b ){
 			file= f;
+			isRepeat= b;
+			iDelay= i;
 			start();
 		}
 
@@ -41,10 +77,19 @@ public class Main{
 			try{
 				br= new BufferedReader( new FileReader( file ) );
 				String s;
-				while( isOn  && null != ( s= br.readLine() ) ){
+				while( isOn ){
+					if( null == ( s= br.readLine() ) ){
+						if( isRepeat ){
+							br.close();
+							br= new BufferedReader( new FileReader( file ) );
+							continue;
+						}else{
+							break;
+						}
+					}
 					for( int i= 0; isOn  && i < s.length(); i++ ){
 						System.out.print( s.charAt( i ) );
-						Thread.sleep( 10 );//[ms]
+						Thread.sleep( iDelay );
 					}
 					System.out.println( "" );
 				}
