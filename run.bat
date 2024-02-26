@@ -1,5 +1,5 @@
 RMDIR /S /Q out
-javac src/*.java -d out
+javac src/*.java -d out --release 7
 REM 
 REM jar --create --file out/Slowcat.jar --manifest manifest.txt lib -C out .
 REM jar --create --file out/Slowcat.jar --manifest manifest.txt -C out . lib

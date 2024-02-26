@@ -36,3 +36,5 @@ cd Slowcat
 ./run.sh
 ```
 
+## How To Move
+<a target="Slowcat" href="./Slowcat.gif"><img alt="Slowcat" width="600px" src="./Slowcat.gif"></a>

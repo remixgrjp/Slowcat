@@ -75,7 +75,8 @@ public class Main{
 		public void run(){
 			System.out.println( "=== THREAD START ===" );
 			try{
-				br= new BufferedReader( new FileReader( file ) );
+				br= new BufferedReader( new InputStreamReader( new java.io.FileInputStream( file.getAbsolutePath() ), "UTF-8" ) ); 
+
 				String s;
 				while( isOn ){
 					if( null == ( s= br.readLine() ) ){
