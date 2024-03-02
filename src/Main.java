@@ -54,7 +54,7 @@ public class Main{
 		}catch( Exception e ){
 			e.printStackTrace();
 		}finally{
-			t.isOn= false;
+			if( null != t ) t.isOn= false;
 		}
 	}
 
@@ -73,7 +73,7 @@ public class Main{
 		}
 
 		public void run(){
-			System.out.println( "=== THREAD START ===" );
+			System.err.println( "=== THREAD START ===" );
 			try{
 				br= new BufferedReader( new InputStreamReader( new java.io.FileInputStream( file.getAbsolutePath() ), "UTF-8" ) ); 
 
@@ -106,7 +106,7 @@ public class Main{
 					}
 				}
 			}
-			System.out.println( "=== THREAD END ===" );
+			System.err.println( "=== THREAD END ===" );
 		}
 	}
 }
