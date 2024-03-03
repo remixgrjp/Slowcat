@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.InputStreamReader;
 import java.io.InputStream;
 
@@ -82,7 +81,7 @@ public class Main{
 					if( null == ( s= br.readLine() ) ){
 						if( isRepeat ){
 							br.close();
-							br= new BufferedReader( new FileReader( file ) );
+							br= new BufferedReader( new InputStreamReader( new java.io.FileInputStream( file.getAbsolutePath() ), "UTF-8" ) ); 
 							continue;
 						}else{
 							break;
